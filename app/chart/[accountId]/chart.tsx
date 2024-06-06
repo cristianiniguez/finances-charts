@@ -1,7 +1,6 @@
 'use client'
 
 import { FC } from 'react'
-import { Box } from '@chakra-ui/react'
 import { groupBy } from 'lodash'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -45,13 +44,13 @@ const AccountChart: FC<AccountChartProps> = ({ data }) => {
   }
 
   return (
-    <Box h='100vh'>
+    <div style={{ height: '100vh' }}>
       <HighchartsReact
         containerProps={{ style: { height: '100%' } }}
         highcharts={Highcharts}
         options={chartOptions}
       />
-    </Box>
+    </div>
   )
 }
 

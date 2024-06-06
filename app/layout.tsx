@@ -1,12 +1,12 @@
 import { FC, PropsWithChildren } from 'react'
-import { Providers } from './providers'
 
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <html lang='es'>
-      <body>
-        <Providers>{children}</Providers>
-      </body>
+      <head>
+        <title>Finances Charts</title>
+      </head>
+      <body>{children}</body>
     </html>
   )
 }
