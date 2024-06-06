@@ -1,4 +1,5 @@
 import { Client, isFullPage } from '@notionhq/client'
+import { orderBy } from 'lodash'
 
 const notion = new Client({
   auth: process.env.NOTION_TOKEN
@@ -11,7 +12,7 @@ export const getAccountData = async (
     database_id: accountId
   })
 
-  return results.filter(isFullPage).map(({ properties }) => ({
+  const data = results.filter(isFullPage).map(({ properties }) => ({
     detail: (({ detail: detailRaw }) => {
       if (detailRaw.type !== 'title') return ''
 
@@ -37,4 +38,6 @@ export const getAccountData = async (
       }))
     })(properties)
   }))
+
+  return orderBy(data, ['date'], ['asc'])
 }
