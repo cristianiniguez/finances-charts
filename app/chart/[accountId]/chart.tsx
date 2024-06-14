@@ -1,46 +1,47 @@
 'use client'
 
 import { FC } from 'react'
-import { groupBy } from 'lodash'
-import Highcharts from 'highcharts'
+import { groupBy, sumBy } from 'lodash'
+import Highcharts, { SeriesColumnOptions } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
+import dayjs from 'dayjs'
 
 type AccountChartProps = {
   data: AccountDataItem[]
 }
 
-const getMarginsData = (data: AccountDataItem[]) => {
+const getChartData = (data: AccountDataItem[]) => {
   const dataGrouped = groupBy(data, 'date')
   return Object.entries(dataGrouped).map(([date, items]) => {
-    const margin = items.reduce(
-      (m, { income, outcome }) => m + income - outcome,
-      0
-    )
-    return { date, margin }
+    const income = sumBy(items, 'income')
+    const outcome = sumBy(items, 'outcome')
+    const margin = sumBy(items, item => item.income - item.outcome)
+    return { date, income, outcome, margin }
   })
 }
 
-const getBalances = (margins: number[]) => {
-  return margins.reduce<number[]>((balances, margin, i) => {
-    return [...balances, (balances[i - 1] ?? 0) + margin]
-  }, [])
-}
+const getX = (date: string) => dayjs(date).startOf('d').unix()
 
 const AccountChart: FC<AccountChartProps> = ({ data }) => {
-  const marginsData = getMarginsData(data)
-  const dates = marginsData.map(({ date }) => date)
-  const margins = marginsData.map(({ margin }) => margin)
-  const balances = getBalances(margins)
+  const chartData = getChartData(data)
+  console.log(chartData)
+
+  const dates = chartData.map(item => item.date)
+  const incomesData = chartData.map(item => item.income)
+  const outcomesData = chartData.map(item => -item.outcome)
+
+  const balances = chartData.reduce<number[]>((b, item, i) => {
+    return [...b, (b[i - 1] ?? 0) + item.margin]
+  }, [])
 
   const chartOptions: Highcharts.Options = {
     title: { text: 'Month Resume' },
     series: [
-      { data: margins, type: 'column', name: 'Margins' },
+      { data: incomesData, type: 'column', name: 'Incomes' },
+      { data: outcomesData, type: 'column', name: 'Outcomes' },
       { data: balances, type: 'line', name: 'Balance' }
     ],
-    xAxis: {
-      categories: dates
-    }
+    xAxis: { categories: dates }
   }
 
   return (

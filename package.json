@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@notionhq/client": "^2.2.15",
+    "dayjs": "^1.11.11",
     "highcharts": "^11.4.3",
     "highcharts-react-official": "^3.2.1",
     "lodash": "^4.17.21",
