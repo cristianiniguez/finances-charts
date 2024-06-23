@@ -18,8 +18,8 @@ export const GET: NextRouteHandler<GetParams> = async (
   }).format(currentBalance)
 
   const svg = /* svg */ `
-    <svg viewBox="0 0 200 100" fill="white" xmlns="http://www.w3.org/2000/svg">
-      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="system-ui" font-weight="700">
+    <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="system-ui" font-weight="700">
         ${currentBalanceFormatted}
       </text>    
     </svg>
