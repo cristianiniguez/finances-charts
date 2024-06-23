@@ -2,9 +2,8 @@
 
 import { FC } from 'react'
 import { groupBy, sumBy } from 'lodash'
-import Highcharts, { SeriesColumnOptions } from 'highcharts'
+import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import dayjs from 'dayjs'
 
 type AccountChartProps = {
   data: AccountDataItem[]
@@ -19,8 +18,6 @@ const getChartData = (data: AccountDataItem[]) => {
     return { date, income, outcome, margin }
   })
 }
-
-const getX = (date: string) => dayjs(date).startOf('d').unix()
 
 const AccountChart: FC<AccountChartProps> = ({ data }) => {
   const chartData = getChartData(data)
