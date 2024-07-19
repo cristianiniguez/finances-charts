@@ -1,13 +1,21 @@
 import { Client, isFullPage } from '@notionhq/client'
-import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
-import { orderBy } from 'lodash'
+import { compact, orderBy } from 'lodash'
 
 const notion = new Client({
   auth: process.env.NOTION_TOKEN
 })
 
-export const getAccountData = async (accountId: string, filter?: QueryDatabaseParameters['filter']): Promise<AccountDataItem[]> => {
-  const { results } = await notion.databases.query({ database_id: accountId, filter })
+export const getAccountIds = async () => {
+  const { results } = await notion.databases.query({ database_id: process.env.ACCOUNTS_DB ?? '' })
+  return compact(results.filter(isFullPage).map(({ properties }) => {
+    const { databaseId } = properties
+    if (!databaseId || databaseId.type !== 'rich_text') return null
+    return databaseId.rich_text[0]?.plain_text ?? null
+  }))
+}
+
+export const getAccountData = async (accountId: string): Promise<AccountDataItem[]> => {
+  const { results } = await notion.databases.query({ database_id: accountId })
 
   const data = results.filter(isFullPage).map(({ properties }) => ({
     detail: (({ detail: detailRaw }) => {
