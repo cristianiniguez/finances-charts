@@ -5,6 +5,7 @@ import { groupBy, sumBy } from 'lodash'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import dayjs from 'dayjs'
+import { formatCurrency } from '@/lib/utils'
 
 type AccountChartProps = {
   data: AccountDataItem[]
@@ -44,13 +45,33 @@ const AccountChart: FC<AccountChartProps> = ({ data }) => {
   const balances = chartData.map(item => item.balance)
 
   const chartOptions: Highcharts.Options = {
-    title: { text: 'Month Resume' },
+    title: { text: `Month Resume (${dayjs().format('MMMM YYYY')})` },
+    tooltip: {
+      pointFormatter: function () {
+        return formatCurrency(this.y ?? 0)
+      }
+    },
     series: [
       { data: incomesData, type: 'column', name: 'Incomes' },
       { data: outcomesData, type: 'column', name: 'Outcomes' },
       { data: balances, type: 'line', name: 'Balance' }
     ],
-    xAxis: { categories: dates }
+    xAxis: {
+      categories: dates,
+      labels: {
+        formatter: function () {
+          return dayjs(this.value).format('DD MMMM')
+        }
+      }
+    },
+    yAxis: {
+      title: { text: '' },
+      labels: {
+        formatter: function () {
+          return formatCurrency(+this.value, { notation: 'compact' })
+        }
+      }
+    }
   }
 
   return (
