@@ -21,7 +21,6 @@ const getChartData = (data: AccountDataItem[]) => {
 
 const AccountChart: FC<AccountChartProps> = ({ data }) => {
   const chartData = getChartData(data)
-  console.log(chartData)
 
   const dates = chartData.map(item => item.date)
   const incomesData = chartData.map(item => item.income)

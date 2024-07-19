@@ -6,7 +6,7 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
       <head>
         <title>Finances Charts</title>
       </head>
-      <body>{children}</body>
+      <body style={{ margin: 0 }}>{children}</body>
     </html>
   )
 }
